@@ -3,16 +3,21 @@ package com.example.myapplication.activity.mahasiswa;
 import static com.example.myapplication.AppApplication.db;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.example.myapplication.R;
 import com.example.myapplication.room.AppDatabase;
 import com.example.myapplication.room.Mahasiswa;
+import com.example.myapplication.util.OnClickAdapterItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +60,25 @@ public class UserActivity extends AppCompatActivity {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recycleAdapter =new RecyclerviewUserAdapter(this,listMahasiswas);
+        recycleAdapter.OnClickAdapterItem(new OnClickAdapterItem() {
+            @Override
+            public void clickItem(int id, int position) {
+                new AlertDialog.Builder(UserActivity.this)
+                        .setTitle("Delete Data")
+                        .setMessage("Are you sure you want to delete this data?")
+
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                listMahasiswas.remove(position);
+                                recycleAdapter.notifyItemChanged(position);
+                                db.userDao().deleteUsers(db.userDao().findById(id));
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
 
     }
 

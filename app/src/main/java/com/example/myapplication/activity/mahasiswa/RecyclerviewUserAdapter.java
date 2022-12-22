@@ -1,6 +1,9 @@
 package com.example.myapplication.activity.mahasiswa;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.room.Mahasiswa;
+import com.example.myapplication.util.OnClickAdapterItem;
 
 import java.util.List;
 
@@ -18,6 +22,8 @@ import java.util.List;
 public class RecyclerviewUserAdapter extends RecyclerView.Adapter<RecyclerviewUserAdapter.MyViewHolder> {
     private Context mContext;
     private List<Mahasiswa> myList;
+    private OnClickAdapterItem onClickAdapterItem;
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tvAlamat;
@@ -39,6 +45,12 @@ public class RecyclerviewUserAdapter extends RecyclerView.Adapter<RecyclerviewUs
         this.myList = albumList;
     }
 
+
+    public void OnClickAdapterItem(OnClickAdapterItem onClickAdapterItem) {
+        this.onClickAdapterItem = onClickAdapterItem;
+    }
+
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -55,6 +67,27 @@ public class RecyclerviewUserAdapter extends RecyclerView.Adapter<RecyclerviewUs
         myViewHolder.tvNim.setText(album.getNim());
         myViewHolder.tvKejuruan.setText(album.getKejuruan());
         myViewHolder.tvAlamat.setText(album.getAlamat());
+
+
+        myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, AddUserActivity.class);
+                intent.putExtra("status", "edit");
+                intent.putExtra("id", album.getId());
+                mContext.startActivity(intent);
+            }
+        });
+
+        myViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (onClickAdapterItem != null) {
+                    onClickAdapterItem.clickItem(album.getId(), i);
+                }
+                return false;
+            }
+        });
 
     }
 
