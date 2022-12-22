@@ -22,9 +22,6 @@ public interface MahasiswaDao {
     @Query("SELECT * FROM mahasiswa WHERE nama LIKE :nama ")
     Mahasiswa findByName(String nama);
 
-    @Query("SELECT * FROM mahasiswa WHERE id=:id ")
-    Mahasiswa findById(int id);
-
     @Insert
     void insertAll(Mahasiswa mahasiswa);
 
@@ -36,5 +33,8 @@ public interface MahasiswaDao {
 
     @Delete
     public void deleteAll(Mahasiswa user1,Mahasiswa user2);
+
+    @Query("SELECT * FROM mahasiswa WHERE id LIKE :mahasiswaId LIMIT 1")
+    Mahasiswa findById(int mahasiswaId);
 
 }
