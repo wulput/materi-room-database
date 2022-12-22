@@ -18,6 +18,8 @@ public class Mahasiswa {
     String kejuruan;
     @ColumnInfo(name = "alamat")
     String alamat;
+    @ColumnInfo(name = "gambar")
+    String gambar;
 
     public int getId() {
         return id;
@@ -57,5 +59,13 @@ public class Mahasiswa {
 
     public void setAlamat(String alamat) {
         this.alamat = alamat;
+    }
+
+    public String getGambar() {
+        return gambar;
+    }
+
+    public void setGambar(String gambar) {
+        this.gambar = gambar;
     }
 }

@@ -30,4 +30,7 @@ public interface MahasiswaDao {
     @Delete
     public void deleteAll(Mahasiswa user1,Mahasiswa user2);
 
+    @Query("SELECT * FROM mahasiswa WHERE id LIKE :mahasiswaId LIMIT 1")
+    Mahasiswa findById(int mahasiswaId);
+
 }

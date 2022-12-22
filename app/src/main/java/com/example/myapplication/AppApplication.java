@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.room.Room;
 
 import com.example.myapplication.room.AppDatabase;
+import com.example.myapplication.room.DataBaseMigrations;
 
 public class AppApplication extends Application {
 
@@ -14,7 +15,14 @@ public class AppApplication extends Application {
     public void onCreate() {
         super.onCreate();
         db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class,"mahasiswa").allowMainThreadQueries().build();
+                AppDatabase.class,"mahasiswa")
+                .addMigrations(
+                        DataBaseMigrations.MIGRATION_1_TO_2,
+                        DataBaseMigrations.MIGRATION_2_TO_3
+                )
+                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build();;
 
     }
 
