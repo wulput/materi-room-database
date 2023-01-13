@@ -6,16 +6,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.os.Environment;
@@ -57,6 +63,7 @@ public class AddUserActivity extends AppCompatActivity implements DialogImageOpt
     private RequestOptions requestOptions;
     private File fileImage;
     Mahasiswa mahasiswa;
+    private NotificationManager mNotifyManager;
 
 
 
@@ -81,15 +88,16 @@ public class AddUserActivity extends AppCompatActivity implements DialogImageOpt
             mahasiswa = new Mahasiswa();
         }
 
-        if (getIntent() != null) {
-            id = getIntent().getIntExtra("id", 0);
-            mahasiswa = db.userDao().findById(id);
-            insertData.setText("Update");
-        }
+//        if (getIntent() != null) {
+//            id = getIntent().getIntExtra("id", 0);
+//            mahasiswa = db.userDao().findById(id);
+//            insertData.setText("Update");
+//        }
+//
+//        if (mahasiswa == null) {
+//            mahasiswa = new Mahasiswa();
+//        }
 
-        if (mahasiswa == null) {
-            mahasiswa = new Mahasiswa();
-        }
 
         insertData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,9 +118,12 @@ public class AddUserActivity extends AppCompatActivity implements DialogImageOpt
                     }
 
                     startActivity(new Intent(AddUserActivity.this,UserActivity.class));
+                    sendNotification();
                 }else {
                     Toast.makeText(getApplicationContext(), "Mohon masukkan dengan benar", Toast.LENGTH_SHORT).show();
                 }
+
+
             }
         });
 
@@ -132,6 +143,27 @@ public class AddUserActivity extends AppCompatActivity implements DialogImageOpt
                         .show();
             }
         });
+
+
+    }
+
+    public void createNotification(String aMessage, Context context)
+    {
+       final int NOTIFY_ID = 0; //  ID untuk notifikasi
+        String id = "TestChannel"; //default_channel_id
+        String title = "MyApp";
+        Intent intent;
+        PendingIntent pendingIntent;
+        NotificationCompat.Builder builder;
+        if(mNotifyManager == null) {
+            mNotifyManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = mNotifyManager
+        }
+
+
     }
 
     @Override
@@ -195,6 +227,7 @@ public class AddUserActivity extends AppCompatActivity implements DialogImageOpt
         }
     }
 
+    //function / method untuk open kamera
     private void openCamera() {
         try {
             fileImage = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".jpg",
@@ -208,6 +241,7 @@ public class AddUserActivity extends AppCompatActivity implements DialogImageOpt
         }
     }
 
+    //function / methode untuk open galeri
     @SuppressLint("IntentReset")
     private void openGallery() {
         Intent intent = new Intent();
@@ -219,6 +253,7 @@ public class AddUserActivity extends AppCompatActivity implements DialogImageOpt
     private void loadImage(File image) {
         if (image == null) return;
 
+        //set imagenya menggunakan Glide
         Glide.with(this)
                 .asBitmap()
                 .apply(requestOptions)

@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.example.myapplication.R;
 import com.example.myapplication.room.AppDatabase;
+import com.example.myapplication.room.DataBaseMigrations;
 import com.example.myapplication.room.Mahasiswa;
 import com.example.myapplication.util.OnClickAdapterItem;
 
@@ -41,7 +42,13 @@ public class UserActivity extends AppCompatActivity {
 
     private void fetchDataFromRoom() {
         db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class,"mahasiswa").allowMainThreadQueries().build();
+                AppDatabase.class,"mahasiswa")
+                .addMigrations(
+                        DataBaseMigrations.MIGRATION_1_TO_3
+                )
+                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build();
         listMahasiswas = db.userDao().getAll();
 
         //just checking data from db

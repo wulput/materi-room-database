@@ -17,11 +17,11 @@ public class AppApplication extends Application {
         db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class,"mahasiswa")
                 .addMigrations(
-                        DataBaseMigrations.MIGRATION_1_TO_2
+                        DataBaseMigrations.MIGRATION_1_TO_3
                 )
                 .fallbackToDestructiveMigration()
                 .allowMainThreadQueries()
-                .build();;
+                .build();
 
     }
 
